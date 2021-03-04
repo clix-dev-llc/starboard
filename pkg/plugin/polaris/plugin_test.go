@@ -119,7 +119,7 @@ func TestPlugin_GetScanJobSpec(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			plugin := polaris.NewPlugin(fixedClock, tc.config)
-			jobSpec, err := plugin.GetScanJobSpec(tc.workload, tc.gvk)
+			jobSpec, _, err := plugin.GetScanJobSpec(tc.workload, nil, tc.gvk)
 			require.NoError(t, err, tc.name)
 			assert.Equal(t, tc.expectedJobSpec, jobSpec, tc.name)
 		})

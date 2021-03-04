@@ -6,6 +6,7 @@ import (
 	"github.com/aquasecurity/starboard/pkg/aqua"
 	"github.com/aquasecurity/starboard/pkg/configauditreport"
 	"github.com/aquasecurity/starboard/pkg/ext"
+	"github.com/aquasecurity/starboard/pkg/plugin/conftest"
 	"github.com/aquasecurity/starboard/pkg/plugin/polaris"
 	"github.com/aquasecurity/starboard/pkg/starboard"
 	"github.com/aquasecurity/starboard/pkg/trivy"
@@ -42,5 +43,15 @@ func GetVulnerabilityReportPlugin(buildInfo starboard.BuildInfo, config starboar
 // You could add your own scanner by implementing the configauditreport.Plugin
 // interface.
 func GetConfigAuditReportPlugin(_ starboard.BuildInfo, config starboard.ConfigData) (configauditreport.Plugin, error) {
-	return polaris.NewPlugin(ext.NewSystemClock(), config), nil
+	scanner, err := config.GetConfigAuditReportsScanner()
+	if err != nil {
+		return nil, err
+	}
+	switch scanner {
+	case starboard.Polaris:
+		return polaris.NewPlugin(ext.NewSystemClock(), config), nil
+	case starboard.Conftest:
+		return conftest.NewPlugin(ext.NewSystemClock(), config), nil
+	}
+	return nil, fmt.Errorf("unsupported configuration audit scanner plugin: %s", scanner)
 }

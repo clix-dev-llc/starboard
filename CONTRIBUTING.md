@@ -199,6 +199,12 @@ started with a basic development workflow. For other install modes see [Operator
    it will create the `starboard-operator` ClusterRole and bind it to the `starboard-operator` service account in the
    `starboard-operator` namespace via the `starboard-operator` ClusterRoleBinding.
 
+3. (Optional) Create configuration objects:
+
+   ```
+   $ kubectl apply -f deploy/static/05-starboard-operator.config.yaml
+   ```
+
 ### In cluster
 
 1. Create the `starboard-operator` Deployment in the `starboard-operator` namespace to run the operator's container:
